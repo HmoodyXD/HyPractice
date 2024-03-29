@@ -22,11 +22,11 @@ public class TournamentJoinCommand extends BaseCommand {
     @Override
     public void onCommand(CommandArgs commandArgs) {
         Player player = commandArgs.getPlayer();
-        TournamentSolo tournament = (TournamentSolo) TournamentSolo.getTournament();
-		TournamentTeams tournament = (TournamentTeams) TournamentTeams.getTournament();
-		TournamentClans tournament = (TournamentClans) TournamentClans.getTournament();
+        TournamentSolo soloTournament = (TournamentSolo) TournamentSolo.getTournament();
+		TournamentTeams teamsTournament = (TournamentTeams) TournamentTeams.getTournament();
+		TournamentClans clansTournament = (TournamentClans) TournamentClans.getTournament();
 
-        if (tournament == null) {
+        if (soloTournament == null && teamsTournament == null && clansTournament == null) {
             player.sendMessage(ChatColor.RED + "No tournament found.");
             return;
         }
@@ -41,6 +41,12 @@ public class TournamentJoinCommand extends BaseCommand {
             return;
         }
 
-        tournament.join(player);
+        if (soloTournament != null) {
+            soloTournament.join(player);
+        } else if (teamsTournament != null) {
+            teamsTournament.join(player);
+        } else if (clansTournament != null) {
+            clansTournament.join(player);
+        }
     }
 }
