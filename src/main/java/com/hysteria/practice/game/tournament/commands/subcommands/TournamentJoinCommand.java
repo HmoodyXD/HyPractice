@@ -6,7 +6,15 @@ import com.hysteria.practice.api.command.Command;
 import com.hysteria.practice.api.command.CommandArgs;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import com.hysteria.practice.game.tournament.Tournament;
+import com.hysteria.practice.game.tournament.impl.TournamentSolo;
+import com.hysteria.practice.game.tournament.impl.TournamentTeams;
+import com.hysteria.practice.game.tournament.impl.TournamentClans;
+
+/**
+ * @author Hysteria Development
+ * @project Practice
+ * @date 2/12/2023
+ */
 
 public class TournamentJoinCommand extends BaseCommand {
 
@@ -14,27 +22,25 @@ public class TournamentJoinCommand extends BaseCommand {
     @Override
     public void onCommand(CommandArgs commandArgs) {
         Player player = commandArgs.getPlayer();
-        
-        Tournament<?> activeTournament = Tournament.getTournament();
-        if (activeTournament == null) {
-            sendErrorMessage(player, "There is no active tournament at the moment.");
+        TournamentSolo tournament = (TournamentSolo) TournamentSolo.getTournament();
+		TournamentTeams tournament = (TournamentTeams) TournamentTeams.getTournament();
+		TournamentClans tournament = (TournamentClans) TournamentClans.getTournament();
+
+        if (tournament == null) {
+            player.sendMessage(ChatColor.RED + "No tournament found.");
             return;
         }
 
         Profile profile = Profile.get(player.getUniqueId());
-        if (profile.isBusy()) {
-            sendErrorMessage(player, "You may not join the tournament in your current state.");
+        if(profile.isBusy()) {
+            player.sendMessage(ChatColor.RED + "You may not join the tournament in your current state.");
             return;
         }
         if (profile.isInTournament()) {
-            sendErrorMessage(player, "You are already in a tournament.");
+            player.sendMessage(ChatColor.RED + "You are already in the tournament.");
             return;
         }
 
-        activeTournament.join(player);
-    }
-
-    private void sendErrorMessage(Player player, String message) {
-        player.sendMessage(ChatColor.RED + message);
+        tournament.join(player);
     }
 }
