@@ -23,48 +23,10 @@ public class TournamentJoinCommand extends BaseCommand {
     @Override
     public void onCommand(CommandArgs commandArgs) {
         Player player = commandArgs.getPlayer();
-        String[] args = commandArgs.getArgs();
-
-        if (args.length > 0) {
-            String tournamentType = args[0].toLowerCase();
-            switch (tournamentType) {
-                case "solo":
-                    joinTournament(player, new TournamentSolo());
-                    break;
-                case "teams":
-                    joinTournament(player, new TournamentTeams());
-                    break;
-                case "clans":
-                    joinTournament(player, new TournamentClans());
-                    break;
-                default:
-                    player.sendMessage(ChatColor.RED + "Invalid tournament type. Use: solo, teams, or clans.");
-                    break;
-            }
-        } else {
-            Tournament<?> activeTournament = Tournament.getTournament();
-            if (activeTournament == null) {
-                player.sendMessage(ChatColor.RED + "There is no active tournament at the moment.");
-                return;
-            }
-
-            Profile profile = Profile.get(player.getUniqueId());
-            if (profile.isBusy()) {
-                player.sendMessage(ChatColor.RED + "You may not join the tournament in your current state.");
-                return;
-            }
-            if (profile.isInTournament()) {
-                player.sendMessage(ChatColor.RED + "You are already in a tournament.");
-                return;
-            }
-
-            activeTournament.join(player);
-        }
-    }
-
-    private void joinTournament(Player player, Tournament<?> tournament) {
-        if (tournament == null) {
-            player.sendMessage(ChatColor.RED + "This type of tournament is not available.");
+        
+        Tournament<?> activeTournament = Tournament.getTournament();
+        if (activeTournament == null) {
+            player.sendMessage(ChatColor.RED + "There is no active tournament at the moment.");
             return;
         }
 
@@ -78,6 +40,6 @@ public class TournamentJoinCommand extends BaseCommand {
             return;
         }
 
-        tournament.join((Player) player);
+        activeTournament.join(player);
     }
 }
