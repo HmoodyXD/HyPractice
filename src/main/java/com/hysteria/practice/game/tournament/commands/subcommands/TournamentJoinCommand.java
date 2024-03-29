@@ -6,16 +6,7 @@ import com.hysteria.practice.api.command.Command;
 import com.hysteria.practice.api.command.CommandArgs;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import com.hysteria.practice.game.tournament.impl.TournamentSolo;
-import com.hysteria.practice.game.tournament.impl.TournamentTeams;
-import com.hysteria.practice.game.tournament.impl.TournamentClans;
 import com.hysteria.practice.game.tournament.Tournament;
-
-/**
- * @author Hysteria Development
- * @project Practice
- * @date 2/12/2023
- */
 
 public class TournamentJoinCommand extends BaseCommand {
 
@@ -26,20 +17,24 @@ public class TournamentJoinCommand extends BaseCommand {
         
         Tournament<?> activeTournament = Tournament.getTournament();
         if (activeTournament == null) {
-            player.sendMessage(ChatColor.RED + "There is no active tournament at the moment.");
+            sendErrorMessage(player, "There is no active tournament at the moment.");
             return;
         }
 
         Profile profile = Profile.get(player.getUniqueId());
         if (profile.isBusy()) {
-            player.sendMessage(ChatColor.RED + "You may not join the tournament in your current state.");
+            sendErrorMessage(player, "You may not join the tournament in your current state.");
             return;
         }
         if (profile.isInTournament()) {
-            player.sendMessage(ChatColor.RED + "You are already in a tournament.");
+            sendErrorMessage(player, "You are already in a tournament.");
             return;
         }
 
         activeTournament.join(player);
+    }
+
+    private void sendErrorMessage(Player player, String message) {
+        player.sendMessage(ChatColor.RED + message);
     }
 }
