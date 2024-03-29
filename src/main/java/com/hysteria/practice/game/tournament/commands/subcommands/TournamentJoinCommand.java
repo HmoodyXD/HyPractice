@@ -62,7 +62,7 @@ public class TournamentJoinCommand extends BaseCommand {
         }
     }
 
-    private <T extends Tournament<?>> void joinTournament(Player player, T tournament) {
+    private void joinTournament(Player player, Tournament<?> tournament) {
         if (tournament == null) {
             player.sendMessage(ChatColor.RED + "This type of tournament is not available.");
             return;
@@ -78,6 +78,6 @@ public class TournamentJoinCommand extends BaseCommand {
             return;
         }
 
-        tournament.join(player);
+        tournament.join((Player) player);
     }
 }
